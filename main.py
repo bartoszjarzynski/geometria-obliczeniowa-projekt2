@@ -49,33 +49,34 @@ def generate_points(num=4, min_val=-50, max_val=50):
 
 # Function to input coordinates from the user
 def input_coordinates():
+    def get_float(prompt):
+        while True:
+            try:
+                return float(input(prompt))
+            except ValueError:
+                print("Invalid input. Please enter a float number.")
+
     points = []
     answer = input("Do you want to input your own coordinates? (yes/no): ").strip().lower()
     if answer == 'yes':
         for i in range(4):
-            x = float(input(f"Enter {i+1} X coordinate: "))
-            y = float(input(f"Enter {i+1} Y coordinate: "))
+            x = get_float(f"Enter X {i+1} coordinate: ")
+            y = get_float(f"Enter Y {i+1} coordinate: ")
             points.append([x, y])
     else:
         points = generate_points()
     return points
 
+
 # Main part of the program
-if __name__ == "__main__":
-    points = input_coordinates()
-    print("Coordinates:", points)
-    plot_graph(points)
-    hull = graham_scan(points)
-    plot_graph(points, hull)
-    print("Convex hull coordinates:", hull)
-    prefix = "The convex hull is "
-    print(len(hull))
-    if len(hull) == 2:
-        print(prefix + "a point")
-    elif len(hull) == 3:
-        print(prefix + "a line segment")
-    elif len(hull) == 4:
-        print(prefix + "a triangle")
-    elif len(hull) == 5:
-        print(prefix + "a quadrilateral")
-    print("End of program")
+points = input_coordinates()
+print("Coordinates:", points)
+plot_graph(points)
+hull = graham_scan(points)
+plot_graph(points, hull)
+hull.pop()
+print("Convex hull coordinates:", hull)
+prefix = "The convex hull is "
+    
+shapes = {1: "a point", 2: "a line segment", 3: "a triangle", 4: "a quadrilateral"}
+print(prefix + shapes.get(len(hull), "an unknown shape"))
